@@ -1,0 +1,36 @@
+---
+name: Setup Ruby
+description: Setup Ruby
+
+inputs:
+  shell:
+    description: 'shell'
+    required: false
+    default: 'bash --noprofile --norc -e -x -o pipefail {0}'
+
+runs:
+  using: composite
+  steps:
+    - name: Install requirements
+      shell: ${{ inputs.shell }}
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y \
+          libyaml-dev \
+          git \
+          cmake \
+          imagemagick \
+          ghostscript \
+          build-essential \
+          g++ \
+          wget \
+          curl \
+          pkg-config \
+          tzdata
+
+    - uses: ./.github/actions/wk/setup/postgresql-client
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        # ruby-version: '...' # Not needed with a .ruby-version file
+        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
